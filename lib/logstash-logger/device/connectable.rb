@@ -18,7 +18,6 @@ module LogStashLogger
 
         @buffer_max_items = opts[:batch_events] || opts[:buffer_max_items]
         @buffer_max_interval = opts[:batch_timeout] || opts[:buffer_max_interval]
-        @
 
         buffer_initialize max_items: @buffer_max_items, max_interval: @buffer_max_interval
       end
