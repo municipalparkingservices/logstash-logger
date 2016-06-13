@@ -18,6 +18,7 @@ module LogStashLogger
 
         @buffer_max_items = opts[:batch_events] || opts[:buffer_max_items]
         @buffer_max_interval = opts[:batch_timeout] || opts[:buffer_max_interval]
+        @
 
         buffer_initialize max_items: @buffer_max_items, max_interval: @buffer_max_interval
       end
@@ -75,9 +76,13 @@ module LogStashLogger
       rescue => e
         warn "#{self.class} - #{e.class} - #{e.message}"
         @io = nil
-        # DO NOT RAISE AN EXCEPTION IF YOU CANNOT LOG
-        #raise
+        handle_connection_error
       end
+
+      def handle_connection_error
+        # Override this method in config/initializers/logstash-logger.rb with your error handling logic
+      end
+
     end
   end
 end
