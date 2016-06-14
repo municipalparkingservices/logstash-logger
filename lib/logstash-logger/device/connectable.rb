@@ -73,11 +73,15 @@ module LogStashLogger
         connect unless connected?
         yield
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message}"
+        warn "(LogStashLogger.Device.Connectable) #{self.class} - #{e.class} - #{e.message}"
         @io = nil
-        # DO NOT RAISE AN EXCEPTION IF YOU CANNOT LOG
-        #raise
+        handle_connection_error
       end
+
+      def handle_connection_error
+        # Override this method in config/initializers/logstash-logger.rb with your error handling logic
+      end
+
     end
   end
 end
