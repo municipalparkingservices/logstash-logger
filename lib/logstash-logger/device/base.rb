@@ -23,7 +23,7 @@ module LogStashLogger
       def close
         @io && @io.close
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message}"
+        warn "(LogStashLogger.Device.Base) #{self.class} - #{e.class} - #{e.message}"
       ensure
         @io = nil
       end

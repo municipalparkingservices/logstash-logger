@@ -73,7 +73,7 @@ module LogStashLogger
         connect unless connected?
         yield
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message}"
+        warn "(LogStashLogger.Device.Connectable) #{self.class} - #{e.class} - #{e.message}"
         @io = nil
         handle_connection_error
       end
