@@ -1,6 +1,8 @@
 module LogStashLogger
   module Device
     class Base
+      MAX_BYTE_SIZE = 8192
+
       attr_reader :io
       attr_accessor :sync
 
@@ -13,7 +15,7 @@ module LogStashLogger
       end
 
       def write(message)
-        @io.write(message) unless message.bytesize > 8192
+        @io.write(message) unless message.bytesize > MAX_BYTE_SIZE
       end
 
       def flush
