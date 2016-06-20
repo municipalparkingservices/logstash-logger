@@ -13,7 +13,7 @@ module LogStashLogger
       end
 
       def write(message)
-        @io.write(message)
+        @io.write(message) unless message.bytesize > 8192
       end
 
       def flush
