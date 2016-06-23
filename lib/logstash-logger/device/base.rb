@@ -15,7 +15,11 @@ module LogStashLogger
       end
 
       def write(message)
-        @io.write(message) unless message.bytesize > MAX_BYTE_SIZE
+        unless message.bytesize > MAX_BYTE_SIZE
+          @io.write(message)
+        else
+          write_to_file(message)
+        end
       end
 
       def flush
@@ -28,6 +32,16 @@ module LogStashLogger
         warn "#{self.class} - #{e.class} - #{e.message}"
       ensure
         @io = nil
+      end
+
+      def write_to_file(message)
+        current_time_string = DateTime.now.strftime("%Y%m%dT%H%M%S%L")
+        output_file_name = "large-log-#{current_time_string}.log"
+        dirname = "error"
+        Dir.mkdir(dirname) unless File.exists?(dirname)
+        log_file = File.open("#{dirname}/#{output_file_name}", 'w')
+        log_file.puts message
+        log_file.close
       end
     end
   end
