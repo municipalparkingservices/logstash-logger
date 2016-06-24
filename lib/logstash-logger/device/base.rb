@@ -38,8 +38,8 @@ module LogStashLogger
         current_time_string = DateTime.now.strftime("%Y%m%dT%H%M%S%L")
         output_file_name = "large-log-#{current_time_string}.log"
         dirname = "error"
-        Dir.mkdir(dirname) unless File.exists?(dirname)
-        log_file = File.open("#{dirname}/#{output_file_name}", 'w')
+        Dir.mkdir("/tmp/#{dirname}") unless File.exists?("/tmp/#{dirname}")
+        log_file = File.open("/tmp/#{dirname}/#{output_file_name}", 'w')
         log_file.puts message
         log_file.close
       end
