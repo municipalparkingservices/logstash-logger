@@ -15,11 +15,7 @@ module LogStashLogger
       end
 
       def write(message)
-        unless message.bytesize > MAX_BYTE_SIZE
-          @io.write(message)
-        else
-          write_to_file(message)
-        end
+        @io.write(message)
       end
 
       def flush
