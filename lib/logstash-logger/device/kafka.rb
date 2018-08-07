@@ -35,12 +35,12 @@ module LogStashLogger
         connect unless @io
         yield
       rescue ::Poseidon::Errors::ChecksumError, Poseidon::Errors::UnableToFetchMetadata => e
-        warn "#{self.class} - #{e.class} -> reconnect/retry"
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} -> reconnect/retry"
         sleep backoff if backoff
         reconnect
         retry
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message} -> giving up"
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message} -> giving up"
         @io = nil
       end
 
@@ -59,7 +59,7 @@ module LogStashLogger
         buffer_flush(final: true)
         @io && @io.close
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message}"
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message}"
       ensure
         @io = nil
       end

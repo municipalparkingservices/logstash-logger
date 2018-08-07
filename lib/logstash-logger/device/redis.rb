@@ -31,7 +31,7 @@ module LogStashLogger
         reconnect
         retry
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message}"
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message}"
         @io = nil
         raise
       end
@@ -51,7 +51,7 @@ module LogStashLogger
         buffer_flush(final: true)
         @io && @io.quit
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message}"
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message}"
       ensure
         @io = nil
       end
@@ -64,7 +64,7 @@ module LogStashLogger
           write_batch(messages, list)
         end
       end
-      
+
       private
 
       def normalize_path(opts)

@@ -29,7 +29,7 @@ module LogStashLogger
       def close
         @io && @io.close
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message}"
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message}"
       ensure
         @io = nil
       end
@@ -39,9 +39,9 @@ module LogStashLogger
         output_file_name = "large-log-#{current_time_string}.log"
         dirname = "error"
         Dir.mkdir("/tmp/#{dirname}") unless ::File.exists?("/tmp/#{dirname}")
-        log_file = ::File.open("/tmp/#{dirname}/#{output_file_name}", 'w')
-        log_file.puts message
-        log_file.close
+        ::File.open("/tmp/#{dirname}/#{output_file_name}", 'w') { |log_file| log_file.puts message }
+      rescue => e
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message}"
       end
     end
   end
