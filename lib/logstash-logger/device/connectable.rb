@@ -73,7 +73,7 @@ module LogStashLogger
         connect unless connected?
         yield
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message}"
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message}"
         @io = nil
         # DO NOT RAISE AN EXCEPTION IF YOU CANNOT LOG
         #raise
