@@ -4,6 +4,7 @@ module LogStashLogger
   module Device
     class Connectable < Base
       include Stud::Buffer
+      MAX_BYTE_SIZE = 8192
 
       def initialize(opts = {})
         super
@@ -53,7 +54,11 @@ module LogStashLogger
       def write_batch(messages)
         with_connection do
           messages.each do |message|
-            @io.write(message)
+            unless message.bytesize > MAX_BYTE_SIZE
+              @io.write(message)
+            else
+              write_to_file(message)
+            end
           end
         end
       end
