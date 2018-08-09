@@ -1,6 +1,8 @@
 module LogStashLogger
   module Device
     class Base
+      MAX_BYTE_SIZE = 8192
+
       attr_reader :io
       attr_accessor :sync
 
@@ -13,7 +15,11 @@ module LogStashLogger
       end
 
       def write(message)
-        @io.write(message)
+        unless message.bytesize > MAX_BYTE_SIZE
+          @io.write(message)
+        else
+          write_to_file(message)
+        end
       end
 
       def flush
@@ -23,9 +29,19 @@ module LogStashLogger
       def close
         @io && @io.close
       rescue => e
-        warn "#{self.class} - #{e.class} - #{e.message}"
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message}"
       ensure
         @io = nil
+      end
+
+      def write_to_file(message)
+        current_time_string = DateTime.now.strftime("%Y%m%dT%H%M%S%L")
+        output_file_name = "large-log-#{current_time_string}.log"
+        dirname = "error"
+        Dir.mkdir("/tmp/#{dirname}") unless ::File.exists?("/tmp/#{dirname}")
+        ::File.open("/tmp/#{dirname}/#{output_file_name}", 'w') { |log_file| log_file.puts message }
+      rescue => e
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message}"
       end
     end
   end
