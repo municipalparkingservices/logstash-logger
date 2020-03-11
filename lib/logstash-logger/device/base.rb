@@ -34,10 +34,22 @@ module LogStashLogger
         @io = nil
       end
 
+      def limit_large_logs(dirname)
+        # Sort these so that the oldest file is always on top
+        large_logs = Dir["/tmp/#{dirname}/*"].sort
+        ::File.delete(large_logs.first) if large_logs.count >= 50
+      rescue => e
+        warn "LOGSTASHFAIL #{self.class} - #{e.class} - #{e.message}"
+      end
+
       def write_to_file(message)
+        dirname = "error"
+        Dir.mkdir("/tmp/#{dirname}") unless ::File.exists?("/tmp/#{dirname}")
+
+        limit_large_logs(dirname)
+
         current_time_string = DateTime.now.strftime("%Y%m%dT%H%M%S%L")
         output_file_name = "large-log-#{current_time_string}.log"
-        dirname = "error"
         Dir.mkdir("/tmp/#{dirname}") unless ::File.exists?("/tmp/#{dirname}")
         ::File.open("/tmp/#{dirname}/#{output_file_name}", 'w') { |log_file| log_file.puts message }
       rescue => e
