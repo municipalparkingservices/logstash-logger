@@ -54,11 +54,7 @@ module LogStashLogger
       def write_batch(messages)
         with_connection do
           messages.each do |message|
-            unless message.bytesize > MAX_BYTE_SIZE
-              @io.write(message)
-            else
-              write_to_file(message)
-            end
+            @io.write(message) unless message.bytesize > MAX_BYTE_SIZE
           end
         end
       end
